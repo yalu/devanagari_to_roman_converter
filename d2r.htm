@@ -1,0 +1,122 @@
+<html>
+<head><title>देवनागरी बाट रोमन परिवर्तक</title>
+<script type="text/javascript">
+function convert_to_Ucode() {
+  var array_one = new Array( "आ", "ऑ", "अ", "ई", "इ", "ऊ", "उ", "ऋ", "ए", "ऐ", "ओ", "औ",      // All SWARs but with V at start and W at end.
+      "ा", "ि", "ी", "ु", "ू", "ृ", "े", "ै", "ो", "ौ", "ं", "ँ", "ः", "्", "ऽ", "ॉ",   // then all Maatras
+      // now consonents -- with Y at start and Z at end  added to take advantage in manipulation.
+      "क़", "ख़", "ग़", "ज़", "ड़", "ढ़", "फ़",
+      "क", "ख", "ग", "घ", "ङ", "च", "छ", "ज", "झ", "ञ", "ट", "ठ", "ड", "ढ", "ण",
+      "त", "थ", "द", "ध", "न", "प", "फ", "ब", "भ", "म",
+      "य", "र", "ल", "व", "श", "ष", "स", "ह",
+      // some manipulations to eliminate additinal  symbols used (eg Z, W etc) ;
+      "Z.hY", "ZY", "ZV", "aV", "V", "W", "Y", "Z",
+      "०", "१", "२", "३", "४", "५", "६", "७", "८", "९", "।", "ॐ", "॰" );
+  var array_two= new Array( "VaaW", "Vaa.uW", "VaW", "ViW", "ViW", "VuW", "VuW", "VRRiW", "VeW", "VaiW", "VoW", "VauW",
+      "aa", "i", "i", "u", "u", "Ri", "e", "ai", "o", "au", "`n", "`N", "^H", ".h", ".a", " aa.u",
+      "YqZ", "YKhZ", "YGZ", "YzZ", " Y.DZ", "Y.DhZ", "YfZ",
+      "YkZ", "YkhZ", "YgZ", "YghZ", "YNgZ", "YchZ", "YchhZ", "YjZ", "YjhZ", "YnZ", "YTZ", "YThZ", "YDZ", "YDhZ", "YNZ",
+      "YtZ", "YthZ", "YdZ", "YdhZ", "YnZ", "YpZ", "YphZ", "YbZ", "YbhZ", "YmZ",
+      "YyZ", "YrZ",  "YlZ", "YvZ", "YshZ", "YShZ", "YsZ", "YhZ",
+      "", "a", "a_", "a_", "", "", "", "",
+      "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "OM", "." );
+  var solo_cons = new Array("k", "kh", "g", "gh", "ng", "ch", "chh", "j", "jh", "n", "t", "th", "d", "dh", "n",
+      "t", "th", "d", "dh", "n", "p", "ph", "b", "bh", "m",
+      "y", "r",  "l", "v", "sh", "sh", "s", "h");
+  var intermediate_text = document.getElementById("legacy_text").value ;
+  for ( loop=0;   loop < 96;    loop++ ) {
+    var idx = 0;
+    while ( idx != -1 ) {
+      intermediate_text = intermediate_text.replace(array_one[loop] , array_two[loop]);
+      idx = intermediate_text.indexOf(array_one[loop]);
+    } // end of while loop
+  } // end of for loop
+  var idy = 0;
+  while (idy != -1) {
+    anuswara_place = intermediate_text.indexOf("`");
+    vowels ="aeiou";
+    if (vowels.match(intermediate_text.charAt(anuswara_place - 1)) != null) {
+      intermediate_text = intermediate_text.replace(/`/g , "");
+    } else {
+      intermediate_text = intermediate_text.replace(/`/g , "a");
+    }
+    idy = intermediate_text.indexOf("`");
+  }
+  var idz = 0;
+  while (idz != -1) {
+    visarga_place = intermediate_text.indexOf("^");
+    vowels ="aeiou";
+    if (vowels.match(intermediate_text.charAt(visarga_place - 1)) != null) {
+      intermediate_text = intermediate_text.replace(/\^/g , "");
+    } else {
+      intermediate_text = intermediate_text.replace(/\^/g , "a");
+    }
+    idz = intermediate_text.indexOf("^");
+  }
+  //remove zwz and znwz if lingering around
+  intermediate_text = intermediate_text.replace(/\u200c/g, "");
+  intermediate_text = intermediate_text.replace(/\u200d/g, "");
+
+  intermediate_text = intermediate_text.toLowerCase();
+
+  intermediate_text = intermediate_text.replace(/vaa/g,"waa");
+  intermediate_text = intermediate_text.replace(/a_/g,"a");
+  intermediate_text = intermediate_text.replace(/y /g,"ya");
+  intermediate_text = intermediate_text.replace(/tr([., ]+)/gm,"tra$1");
+  intermediate_text = intermediate_text.replace(/dr([., ]+)/gm,"dra$1");
+  intermediate_text = intermediate_text.replace(/pr([., ]+)/gm,"pra$1");
+  intermediate_text = intermediate_text.replace(/pt([., ]+)/gm,"pta$1");
+  intermediate_text = intermediate_text.replace(/dd([., ]+)/gm,"dda$1");
+  intermediate_text = intermediate_text.replace(/tn([., ]+)/gm,"tna$1");
+  intermediate_text = intermediate_text.replace(/([.,]{1})([a-z]{1})/gm,"$1 $2");
+
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp(" "+solo_cons[loop]+" ","gm");
+    intermediate_text = intermediate_text.replace(re, " "+ solo_cons[loop] + "a ");
+  }
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp(" "+solo_cons[loop]+"\\.","gm");
+    intermediate_text = intermediate_text.replace(re, " "+ solo_cons[loop] + "a.");
+  }
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp("\\."+solo_cons[loop]+"\\.","gm");
+    intermediate_text = intermediate_text.replace(re, "."+ solo_cons[loop] + "a.");
+  }
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp(" "+solo_cons[loop]+"\\,","gm");
+    intermediate_text = intermediate_text.replace(re, " "+ solo_cons[loop] + "a,");
+  }
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp("^"+solo_cons[loop]+" ","gm");
+    intermediate_text = intermediate_text.replace(re, solo_cons[loop] + "a ");
+  }
+  for ( loop=0;   loop < 33;    loop++ ) {
+    var re = new RegExp("^"+solo_cons[loop]+"\\.","gm");
+    intermediate_text = intermediate_text.replace(re, solo_cons[loop] + "a.");
+  }
+  for ( loop=0; loop < 33; loop++ ) {
+    var re = new RegExp("^"+solo_cons[loop]+"\\,","gm");
+    intermediate_text = intermediate_text.replace(re, solo_cons[loop] + "a,");
+  }
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+  }
+  intermediate_text = toTitleCase(intermediate_text);
+  document.getElementById("unicode_text").value = intermediate_text ;  // put the processed text in the output box.
+}
+</script>
+</head>
+<body>
+<form name="form1">
+  <br>
+  Paste the <b>Unicode Devanagari</b> text in the box below : <br>
+  <textarea name = "Unicode_Devanagari_TextToConvert" id="legacy_text" cols="80" rows="8"></textarea>
+  <br>
+  <input type = "button" id="converter" name="converter" value="Romanize >> " onClick="convert_to_Ucode();" accesskey="c" title="शॉर्टकट alt+c">
+  <br>
+  This is <b>Romanized</b> version of the above : <br/>
+  <textarea name = "iTrans_Output" id="unicode_text" cols="84" rows="10"></textarea>
+  <br /><br />
+</form>
+</body>
+</html>
