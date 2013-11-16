@@ -24,6 +24,8 @@ function convert_to_Ucode() {
       "t", "th", "d", "dh", "n", "p", "ph", "b", "bh", "m",
       "y", "r",  "l", "v", "sh", "sh", "s", "h");
   var intermediate_text = document.getElementById("legacy_text").value ;
+
+  // Initial conversion
   for ( loop=0;   loop < 96;    loop++ ) {
     var idx = 0;
     while ( idx != -1 ) {
@@ -31,6 +33,8 @@ function convert_to_Ucode() {
       idx = intermediate_text.indexOf(array_one[loop]);
     } // end of while loop
   } // end of for loop
+
+  // Handle anuswara and chandravindu
   var idy = 0;
   while (idy != -1) {
     anuswara_place = intermediate_text.indexOf("`");
@@ -42,6 +46,8 @@ function convert_to_Ucode() {
     }
     idy = intermediate_text.indexOf("`");
   }
+
+  //Handle visarga
   var idz = 0;
   while (idz != -1) {
     visarga_place = intermediate_text.indexOf("^");
@@ -53,14 +59,16 @@ function convert_to_Ucode() {
     }
     idz = intermediate_text.indexOf("^");
   }
-  //remove zwz and znwz if lingering around
+
+  //remove zwz and znwz if lingering around and other cleanups
   intermediate_text = intermediate_text.replace(/\u200c/g, "");
   intermediate_text = intermediate_text.replace(/\u200d/g, "");
+  intermediate_text = intermediate_text.replace(/a_/g,"a");
 
   intermediate_text = intermediate_text.toLowerCase();
 
+  // Nepali Proper Noun specific rules
   intermediate_text = intermediate_text.replace(/vaa/g,"waa");
-  intermediate_text = intermediate_text.replace(/a_/g,"a");
   intermediate_text = intermediate_text.replace(/y /g,"ya");
   intermediate_text = intermediate_text.replace(/tr([., ]+)/gm,"tra$1");
   intermediate_text = intermediate_text.replace(/dr([., ]+)/gm,"dra$1");
@@ -68,8 +76,12 @@ function convert_to_Ucode() {
   intermediate_text = intermediate_text.replace(/pt([., ]+)/gm,"pta$1");
   intermediate_text = intermediate_text.replace(/dd([., ]+)/gm,"dda$1");
   intermediate_text = intermediate_text.replace(/tn([., ]+)/gm,"tna$1");
+
+  // add a space after period or comma if there isn't
   intermediate_text = intermediate_text.replace(/([.,]{1})([a-z]{1})/gm,"$1 $2");
 
+  // Rules for stand-alone consonants - those with spaces or punctuations around
+  // or at the beginning of line.
   for ( loop=0;   loop < 33;    loop++ ) {
     var re = new RegExp(" "+solo_cons[loop]+" ","gm");
     intermediate_text = intermediate_text.replace(re, " "+ solo_cons[loop] + "a ");
@@ -98,26 +110,31 @@ function convert_to_Ucode() {
     var re = new RegExp("^"+solo_cons[loop]+"\\,","gm");
     intermediate_text = intermediate_text.replace(re, solo_cons[loop] + "a,");
   }
+
+  // Title case the Proper nouns
   function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   }
   intermediate_text = toTitleCase(intermediate_text);
+
+  //put back the corrected text into the text area
   document.getElementById("unicode_text").value = intermediate_text ;  // put the processed text in the output box.
 }
 </script>
 </head>
 <body>
-<h1>Devanagari to Roman Converter</h>
+<h1>Devanagari to Roman Converter</h1>
 <form name="form1">
-  <br>
-  Paste the <b>Unicode Devanagari</b> text in the box below : <br>
-  <textarea name = "Unicode_Devanagari_TextToConvert" id="legacy_text" cols="80" rows="8"></textarea>
-  <br>
+  Paste the <b>Unicode Devanagari</b> text in the box below:<br/>
+  <textarea name = "Unicode_Devanagari_TextToConvert" id="legacy_text" cols="80" rows="10"></textarea>
+  <br/>
   <input type = "button" id="converter" name="converter" value="Romanize >> " onClick="convert_to_Ucode();" accesskey="c" title="शॉर्टकट alt+c">
-  <br>
-  This is <b>Romanized</b> version of the above : <br/>
-  <textarea name = "iTrans_Output" id="unicode_text" cols="84" rows="10"></textarea>
-  <br /><br />
+  <br/>
+  <br/>
+  Following is <b>Romanized</b> version of the above:<br/>
+  <textarea name = "iTrans_Output" id="unicode_text" cols="80" rows="10"></textarea>
+  <br/>
+  <br/>
 </form>
 </body>
 </html>
