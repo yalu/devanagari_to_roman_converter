@@ -69,7 +69,6 @@ function convert_to_Ucode() {
 
   // Nepali Proper Noun specific rules
 
-  intermediate_text = intermediate_text.replace(/vaa/gm,"waa");
   intermediate_text = intermediate_text.replace(/y([., ]|$)/gm,"ya$1");
   intermediate_text = intermediate_text.replace(/tr([., ]|$)/gm,"tra$1");
   intermediate_text = intermediate_text.replace(/dr([., ]|$)/gm,"dra$1");
@@ -77,6 +76,7 @@ function convert_to_Ucode() {
   intermediate_text = intermediate_text.replace(/pt([., ]|$)/gm,"pta$1");
   intermediate_text = intermediate_text.replace(/dd([., ]|$)/gm,"dda$1");
   intermediate_text = intermediate_text.replace(/tn([., ]|$)/gm,"tna$1");
+  intermediate_text = intermediate_text.replace(/nt([., ]|$)/gm,"nta$1");
   intermediate_text = intermediate_text.replace(/rk([., ]|$)/gm,"rka$1");
   intermediate_text = intermediate_text.replace(/rn([., ]|$)/gm,"rna$1");
 
@@ -88,6 +88,7 @@ function convert_to_Ucode() {
   intermediate_text = intermediate_text.replace(/gg/g,"g");
 
   // conjuncts with va -- there may be more of these
+  intermediate_text = intermediate_text.replace(/vaa/gm,"waa");
   intermediate_text = intermediate_text.replace(/hv/gm,"hw");
   intermediate_text = intermediate_text.replace(/sv/gm,"sw");
   intermediate_text = intermediate_text.replace(/dv/gm,"dw");
