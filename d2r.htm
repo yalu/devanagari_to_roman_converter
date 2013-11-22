@@ -68,6 +68,7 @@ function convert_to_Ucode() {
   intermediate_text = intermediate_text.toLowerCase();
 
   // Nepali Proper Noun specific rules
+
   intermediate_text = intermediate_text.replace(/vaa/gm,"waa");
   intermediate_text = intermediate_text.replace(/y([., ]|$)/gm,"ya$1");
   intermediate_text = intermediate_text.replace(/tr([., ]|$)/gm,"tra$1");
@@ -78,13 +79,18 @@ function convert_to_Ucode() {
   intermediate_text = intermediate_text.replace(/tn([., ]|$)/gm,"tna$1");
   intermediate_text = intermediate_text.replace(/rk([., ]|$)/gm,"rka$1");
   intermediate_text = intermediate_text.replace(/rn([., ]|$)/gm,"rna$1");
+
   // replace double "a" with single
   intermediate_text = intermediate_text.replace(/aa/g,"a");
   intermediate_text = intermediate_text.replace(/aa/g,"a");
+
   // replace double "g" with single
   intermediate_text = intermediate_text.replace(/gg/g,"g");
-  intermediate_text = intermediate_text.replace(/hva/gm,"hwa");
-  intermediate_text = intermediate_text.replace(/sva/gm,"swa");
+
+  // conjuncts with va -- there may be more of these
+  intermediate_text = intermediate_text.replace(/hv/gm,"hw");
+  intermediate_text = intermediate_text.replace(/sv/gm,"sw");
+  intermediate_text = intermediate_text.replace(/dv/gm,"dw");
 
   // add a space after period or comma if there isn't
   intermediate_text = intermediate_text.replace(/([.,]{1})([a-z]{1})/gm,"$1 $2");
